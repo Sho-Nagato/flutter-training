@@ -6,15 +6,14 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  final title = 'Flutterサンプル';
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Flutter Demo',
       home: MyHomePage(
-        title: title,
+        title: 'Flutterサンプル',
       ),
     );
   }
