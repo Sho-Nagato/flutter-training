@@ -34,12 +34,22 @@ class MyHomePage extends StatefulWidget {
   }
 }
 
+class Data {
+  String message;
+  Data(this.message): super();
+
+  @override
+  String toString() {
+    return message;
+  }
+}
+
 class _MyHomePageState extends State<MyHomePage> {
-  String message = 'Hello!!';
+  Data data = Data("Hello!!");
 
   void setMessage() {
     setState(() {
-      message = 'タップしました!!';
+      data = Data('タップしました!!');
     });
   }
 
@@ -50,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Text(
-        message,
+        data.toString(),
         style: const TextStyle(fontSize: 25.0),
       ),
       floatingActionButton: FloatingActionButton(
