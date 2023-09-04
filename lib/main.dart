@@ -35,21 +35,28 @@ class MyHomePage extends StatefulWidget {
 }
 
 class Data {
-  String message;
-  Data(this.message): super();
+  int price;
+  String name;
+  Data(this.name, this.price): super();
 
   @override
   String toString() {
-    return message;
+    return '$name : $price円';
   }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Data data = Data("Hello!!");
+  static final data = [
+    Data('Apple', 200),
+    Data('Orange', 150),
+    Data('Peach', 300),
+    Data('Grape', 250)
+  ];
+  Data item = data[0];
 
   void setMessage() {
     setState(() {
-      data = Data('タップしました!!');
+      item = (data..shuffle()).first;
     });
   }
 
@@ -60,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Text(
-        data.toString(),
+        item.toString(),
         style: const TextStyle(fontSize: 25.0),
       ),
       floatingActionButton: FloatingActionButton(
