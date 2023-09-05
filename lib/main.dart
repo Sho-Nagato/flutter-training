@@ -11,20 +11,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      title: 'Flutter Demo',
-      home: MyHomePage(
-        title: 'Flutterサンプル',
-      ),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  final String title;
-
   const MyHomePage({
     Key? key,
-    required this.title,
   }) : super(key: key);
 
   @override
@@ -33,46 +27,24 @@ class MyHomePage extends StatefulWidget {
   }
 }
 
-class Data {
-  int price;
-  String name;
-  Data(this.name, this.price): super();
-
-  @override
-  String toString() {
-    return '$name : $price円';
-  }
-}
-
 class _MyHomePageState extends State<MyHomePage> {
-  static final data = [
-    Data('Apple', 200),
-    Data('Orange', 150),
-    Data('Peach', 300),
-    Data('Grape', 250)
-  ];
-  Data item = data[0];
-
-  void setMessage() {
-    setState(() {
-      item = (data..shuffle()).first;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text("Flutter Demo"),
       ),
-      body: Text(
-        item.toString(),
-        style: const TextStyle(fontSize: 25.0),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: setMessage,
-        tooltip: 'Set Message',
-        child: const Icon(Icons.star),
+      body: GridView.count(
+        crossAxisCount: 3,
+        children: [
+          for (var i = 0; i < 9; i++)
+            const Padding(
+              padding: EdgeInsets.all(10.0),
+              child: ColoredBox(
+                color: Colors.amber,
+              ),
+            ),
+        ],
       ),
     );
   }
