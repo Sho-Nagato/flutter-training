@@ -57,9 +57,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            FloatingActionButton(
+            RawMaterialButton(
               onPressed: buttonPressed,
-              child: const Icon(Icons.android),
+              fillColor: Colors.white,
+              elevation: 10.0,
+              padding: const EdgeInsets.all(10.0),
+              child: const Text(
+                "Push me!!",
+                style: TextStyle(
+                  fontSize: 32.0,
+                  color: Color(0xFF000000),
+                  fontWeight: FontWeight.w400,
+                  fontFamily: "Roboto"
+                ),
+              ),
             )
           ]
         ),
