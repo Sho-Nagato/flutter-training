@@ -7,25 +7,21 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Flutter Demo',
-      home: MyHomePage(
-        title: 'Flutterサンプル',
+    return MaterialApp(
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        primaryColor: const Color(0xFF2196f3),
+        canvasColor: const Color(0xFFfafafa),
       ),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  final String title;
-
-  const MyHomePage({
-    Key? key,
-    required this.title,
-  }) : super(key: key);
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -33,40 +29,61 @@ class MyHomePage extends StatefulWidget {
   }
 }
 
-class Data {
-  String message;
-  Data(this.message): super();
-
-  @override
-  String toString() {
-    return message;
-  }
-}
-
 class _MyHomePageState extends State<MyHomePage> {
-  Data data = Data("Hello!!");
-
-  void setMessage() {
-    setState(() {
-      data = Data('タップしました!!');
-    });
-  }
-
+  static String _message = "OK";
+  static final List _hands = <String>['グー', 'チョキ', 'パー'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('App Name'),
       ),
-      body: Text(
-        data.toString(),
-        style: const TextStyle(fontSize: 25.0),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: setMessage,
-        tooltip: 'Set Message',
-        child: const Icon(Icons.star),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                _message,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize:32.0,
+                  color: Color(0xFF000000),
+                  fontWeight: FontWeight.w400,
+                  fontFamily: "Roboto"
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: buttonPressed,
+              child: const Padding(
+                padding: EdgeInsets.all(10.0),
+                // child: Icon(
+                //   Icons.android,
+                //   size: 50.0,
+                // ),
+                child: Text(
+                  "Push me!!",
+                  style: TextStyle(
+                    fontSize:32.0,
+                    color: Color(0xFF000000),
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "Roboto"
+                  )
+                )
+              )
+            )
+          ]
+        ),
       ),
     );
+  }
+  void buttonPressed(){
+    setState(() {
+      _message = (_hands..shuffle()).first;
+    });
   }
 }
