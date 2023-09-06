@@ -57,11 +57,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            IconButton(
+            FloatingActionButton(
               onPressed: buttonPressed,
-              icon: const Icon(Icons.insert_emoticon),
-              iconSize: 100,
-              color: Colors.blue,
+              child: const Icon(Icons.android),
             )
           ]
         ),
