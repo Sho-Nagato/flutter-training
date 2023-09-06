@@ -31,7 +31,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static String _message = "OK";
-  static String _selected = "A";
+  static String _selected = "One";
 
   @override
   Widget build(BuildContext context) {
@@ -63,47 +63,20 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(10.0)
             ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Radio<String>(
-                  value: "A",
-                  groupValue: _selected,
-                  onChanged: checkChanged,
-                ),
-                const Text(
-                  "radio A",
-                  style: TextStyle(
-                    fontSize:28.0,
-                    color: Color(0xFF000000),
-                    fontWeight: FontWeight.w400,
-                    fontFamily: "Roboto"
-                  )
-                )
-              ]
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Radio<String>(
-                  value: "B",
-                  groupValue: _selected,
-                  onChanged: checkChanged,
-                ),
-                const Text(
-                  "radio B",
-                  style: TextStyle(
-                    fontSize:28.0,
-                    color: Color(0xFF000000),
-                    fontWeight: FontWeight.w400,
-                    fontFamily: "Roboto"
-                  )
-                )
-              ]
+            DropdownButton<String>(
+              onChanged: popupSelected,
+              value: _selected,
+              style: const TextStyle(
+                fontSize:28.0,
+                color: Color(0xFF000000),
+                fontWeight: FontWeight.w400,
+                fontFamily: "Roboto"
+              ),
+              items: const <DropdownMenuItem<String>> [
+                DropdownMenuItem<String>(value: "One", child: Text('One')),
+                DropdownMenuItem<String>(value: "Two", child: Text('Two')),
+                DropdownMenuItem<String>(value: "Three", child: Text('Three')),
+              ],
             ),
           ]
         ),
@@ -111,9 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void checkChanged(String? value) {
+  void popupSelected(String? value) {
     setState(() {
-      _selected = value ?? "no data";
+      _selected = value ?? "not selected..!!";
       _message = "select: $_selected";
     });
   }
