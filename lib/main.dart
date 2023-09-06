@@ -57,23 +57,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: buttonPressed,
               child: const Padding(
                 padding: EdgeInsets.all(10.0),
-                // child: Icon(
-                //   Icons.android,
-                //   size: 50.0,
-                // ),
-                child: Text(
-                  "Push me!!",
-                  style: TextStyle(
-                    fontSize:32.0,
-                    color: Color(0xFF000000),
-                    fontWeight: FontWeight.w400,
-                    fontFamily: "Roboto"
-                  )
-                )
+                child: Icon(
+                  Icons.android,
+                  size: 50.0,
+                ),
               )
             )
           ]
