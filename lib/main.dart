@@ -57,15 +57,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            ElevatedButton(
+            IconButton(
               onPressed: buttonPressed,
-              child: const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Icon(
-                  Icons.android,
-                  size: 50.0,
-                ),
-              )
+              icon: const Icon(Icons.insert_emoticon),
+              iconSize: 100,
+              color: Colors.blue,
             )
           ]
         ),
