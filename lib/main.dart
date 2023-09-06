@@ -31,7 +31,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static String _message = "OK";
-  static final _controller = TextEditingController();
+  static bool _checked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -60,43 +60,37 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: TextField(
-                onChanged: textChanged,
-                controller: _controller,
-                style: const TextStyle(
-                  fontSize: 28.0,
-                  color: Color(0xFF000000),
-                  fontWeight: FontWeight.w400,
-                  fontFamily: "Roboto"
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Checkbox(
+                      value: _checked,
+                      onChanged: checkChanged
+                  ),
+                  const Text(
+                    "Checkbox",
+                    style: TextStyle(
+                      fontSize:28.0,
+                      color: Color(0xFF000000),
+                      fontWeight: FontWeight.w400,
+                      fontFamily: "Roboto"
+                    ),
+                  )
+                ],
               ),
             ),
-            ElevatedButton(
-              onPressed: buttonPressed,
-              child: const Text(
-                "Push me!!",
-                style: TextStyle(
-                  fontSize:32.0,
-                  color: Color(0xFF000000),
-                  fontWeight: FontWeight.w400,
-                  fontFamily: "Roboto"
-                ),
-              ),
-            )
           ]
         ),
       ),
     );
   }
-  void buttonPressed(){
-    setState(() {
-      _message = "you said : ${_controller.text}";
-    });
-  }
 
-  void textChanged(String val) {
+  void checkChanged(bool? value) {
     setState(() {
-      _message = val.toUpperCase();
+      _checked = value!;
+      _message = value ? "checked!!" : "not checked..!!";
     });
   }
 }
