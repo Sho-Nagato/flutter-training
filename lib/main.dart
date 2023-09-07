@@ -86,17 +86,20 @@ class _MyHomePageState extends State<MyHomePage> {
   void buttonPressed(){
     showDialog(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text("Hello"),
-        content: const Text("This is sample!!"),
-        actions: [
-          TextButton(
-            child: const Text("Cancel"),
-            onPressed: () => Navigator.pop<String>(context, "Cancel"),
+      builder: (BuildContext context) => SimpleDialog(
+        title: const Text("Select assignment"),
+        children: [
+          SimpleDialogOption(
+            child: const Text("One"),
+            onPressed: () => Navigator.pop<String>(context, "One"),
           ),
-          TextButton(
-            child: const Text("OK"),
-            onPressed: () => Navigator.pop<String>(context, "OK"),
+          SimpleDialogOption(
+            child: const Text("Two"),
+            onPressed: () => Navigator.pop<String>(context, "Two"),
+          ),
+          SimpleDialogOption(
+            child: const Text("Three"),
+            onPressed: () => Navigator.pop<String>(context, "Three"),
           ),
         ],
       )
