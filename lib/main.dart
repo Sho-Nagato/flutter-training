@@ -30,8 +30,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static String _message = "OK";
-  static final List _hands = <String>['グー', 'チョキ', 'パー'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,12 +43,12 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(20.0),
+            const Padding(
+              padding: EdgeInsets.all(20.0),
               child: Text(
-                _message,
+                "OK",
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize:32.0,
                   color: Color(0xFF000000),
                   fontWeight: FontWeight.w400,
@@ -57,13 +56,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
+
+            const Padding(
+              padding: EdgeInsets.all(10.0),
+            ),
+
             ElevatedButton(
               onPressed: buttonPressed,
               child: const Padding(
                 padding: EdgeInsets.all(10.0),
-                child: Icon(
-                  Icons.android,
-                  size: 50.0,
+                child: Text(
+                  "Tap me!!",
+                  style: TextStyle(
+                    fontSize:32.0,
+                    color: Color(0xFF000000),
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "Roboto"
+                  ),
                 ),
               )
             )
@@ -72,9 +81,21 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
   void buttonPressed(){
-    setState(() {
-      _message = (_hands..shuffle()).first;
-    });
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => const AlertDialog(
+          title: Text("Hello"),
+          content: Text("This is sample!!"),
+        )
+    );
   }
+
+  // Widget createAlertDialog(BuildContext context) {
+  //   return const AlertDialog(
+  //     title: Text("Hello"),
+  //     content: Text("This is sample!!"),
+  //   );
+  // }
 }
