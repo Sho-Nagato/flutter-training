@@ -9,14 +9,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        primaryColor: const Color(0xFF2196f3),
-        canvasColor: const Color(0xFFfafafa),
-      ),
-      home: const MyHomePage(),
-    );
+    return const MaterialApp(home: MyHomePage(),);
   }
 }
 
@@ -30,8 +23,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static String _message = "OK";
-  static final List _hands = <String>['グー', 'チョキ', 'パー'];
+  static int _count = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Text(
-                _message,
+                "$_count",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize:32.0,
@@ -57,24 +50,81 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            ElevatedButton(
-              onPressed: buttonPressed,
-              child: const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Icon(
-                  Icons.android,
-                  size: 50.0,
-                ),
-              )
-            )
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: SizedBox(
+                width: double.infinity,
+                child:  ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _count++;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue
+                  ),
+                  child: const Text("プラス", style: TextStyle(fontSize: 20.0),)
+                )
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: SizedBox(
+                  width: double.infinity,
+                  child:  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _count--;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red
+                    ),
+                    child: const Text("マイナス", style: TextStyle(fontSize: 20.0),)
+                  )
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: SizedBox(
+                  width: double.infinity,
+                  child:  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _count *= 2;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.amber
+                    ),
+                    child: const Text("2倍", style: TextStyle(fontSize: 20.0),)
+                  )
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: SizedBox(
+                  width: double.infinity,
+                  child:  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _count = 0;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green
+                    ),
+                    child: const Text("クリア", style: TextStyle(fontSize: 20.0),)
+                  )
+              ),
+            ),
           ]
         ),
       ),
     );
-  }
-  void buttonPressed(){
-    setState(() {
-      _message = (_hands..shuffle()).first;
-    });
   }
 }
