@@ -15,23 +15,14 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xFF2196f3),
         canvasColor: const Color(0xFFfafafa),
       ),
-      home: const MyHomePage(),
+      home: const FirstScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _MyHomePageState();
-  }
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  static String _message = "OK";
-  static int _index = 0;
+class FirstScreen extends StatelessWidget {
+  static final _controller = TextEditingController();
+  const FirstScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,55 +30,108 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('App Name'),
       ),
-      body: Column(
-        children: [
-          Text(
-            _message,
-            style: const TextStyle(
-              fontSize: 32.0
-            ),
-          ),
-          ListView(
-            shrinkWrap: true,
-            padding: const EdgeInsets.all(20.0),
-            children: [
-              ListTile(
-                leading: const Icon(Icons.android, size:32),
-                title: const Text("first item", style: TextStyle(fontSize: 28.0)),
-                selected: _index == 1,
-                onTap: () {
-                  _index = 1;
-                  tapTile();
-                },
+      body: Center(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  "First Screen",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize:32.0,
+                    color: Color(0xFF000000),
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "Roboto"
+                  ),
+                ),
               ),
-              ListTile(
-                leading: const Icon(Icons.favorite, size:32),
-                title: const Text("second item", style: TextStyle(fontSize: 28.0)),
-                selected: _index == 2,
-                onTap: () {
-                  _index = 2;
-                  tapTile();
-                },
+              TextField(
+                controller: _controller,
+                style: const TextStyle(fontSize: 28.0),
               ),
-              ListTile(
-                leading: const Icon(Icons.home, size:32),
-                title: const Text("Third item", style: TextStyle(fontSize: 28.0)),
-                selected: _index == 3,
-                onTap: () {
-                  _index = 3;
-                  tapTile();
-                },
+              const Padding(
+                padding: EdgeInsets.all(10.0),
               ),
-            ],
-          )
-        ],
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SecondScreen(_controller.text)
+                      )
+                    );
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      "Next Screen",
+                      style: TextStyle(fontSize: 20.0),
+                    ),
+                  )
+              )
+            ]
+        ),
       ),
     );
   }
+}
 
-  void tapTile() {
-    setState(() {
-      _message = "you tapped: No, $_index";
-    });
+class SecondScreen extends StatelessWidget {
+  final String _value;
+
+  const SecondScreen(this._value, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('App Name'),
+      ),
+      body: Center(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  "Second Screen",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize:32.0,
+                    color: Color(0xFF000000),
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "Roboto"
+                  ),
+                ),
+              ),
+              Text(
+                "you typed : $_value",
+                style: const TextStyle(fontSize: 28.0),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    "Previous Screen",
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                )
+              )
+            ]
+        ),
+      ),
+    );
   }
 }
