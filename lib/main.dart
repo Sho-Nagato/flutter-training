@@ -30,7 +30,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static String _message = "";
 
   @override
   Widget build(BuildContext context) {
@@ -38,77 +37,25 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('App Name'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                _message,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize:32.0,
-                  color: Color(0xFF000000),
-                  fontWeight: FontWeight.w400,
-                  fontFamily: "Roboto"
-                ),
-              ),
+      body: Column(
+        children: [
+          const Text(
+            "OK",
+            style: TextStyle(
+              fontSize: 32.0
             ),
-
-            const Padding(
-              padding: EdgeInsets.all(10.0),
-            ),
-
-            ElevatedButton(
-              onPressed: buttonPressed,
-              child: const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Text(
-                  "Tap me!!",
-                  style: TextStyle(
-                    fontSize:32.0,
-                    color: Color(0xFF000000),
-                    fontWeight: FontWeight.w400,
-                    fontFamily: "Roboto"
-                  ),
-                ),
-              )
-            )
-          ]
-        ),
+          ),
+          ListView(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(20.0),
+            children: const [
+              Text("First", style: TextStyle(fontSize: 20.0)),
+              Text("Second", style: TextStyle(fontSize: 20.0)),
+              Text("Third", style: TextStyle(fontSize: 20.0)),
+            ],
+          )
+        ],
       ),
     );
-  }
-
-  void buttonPressed(){
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => SimpleDialog(
-        title: const Text("Select assignment"),
-        children: [
-          SimpleDialogOption(
-            child: const Text("One"),
-            onPressed: () => Navigator.pop<String>(context, "One"),
-          ),
-          SimpleDialogOption(
-            child: const Text("Two"),
-            onPressed: () => Navigator.pop<String>(context, "Two"),
-          ),
-          SimpleDialogOption(
-            child: const Text("Three"),
-            onPressed: () => Navigator.pop<String>(context, "Three"),
-          ),
-        ],
-      )
-    ).then<void>((value) => resultAlert(value));
-  }
-
-  void resultAlert(String value) {
-    setState(() {
-      _message = "selected : $value";
-    });
   }
 }
