@@ -30,6 +30,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static String _message = "OK";
+  static int _index = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -39,23 +41,53 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         children: [
-          const Text(
-            "OK",
-            style: TextStyle(
+          Text(
+            _message,
+            style: const TextStyle(
               fontSize: 32.0
             ),
           ),
           ListView(
             shrinkWrap: true,
             padding: const EdgeInsets.all(20.0),
-            children: const [
-              Text("First", style: TextStyle(fontSize: 20.0)),
-              Text("Second", style: TextStyle(fontSize: 20.0)),
-              Text("Third", style: TextStyle(fontSize: 20.0)),
+            children: [
+              ListTile(
+                leading: const Icon(Icons.android, size:32),
+                title: const Text("first item", style: TextStyle(fontSize: 28.0)),
+                selected: _index == 1,
+                onTap: () {
+                  _index = 1;
+                  tapTile();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.favorite, size:32),
+                title: const Text("second item", style: TextStyle(fontSize: 28.0)),
+                selected: _index == 2,
+                onTap: () {
+                  _index = 2;
+                  tapTile();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.home, size:32),
+                title: const Text("Third item", style: TextStyle(fontSize: 28.0)),
+                selected: _index == 3,
+                onTap: () {
+                  _index = 3;
+                  tapTile();
+                },
+              ),
             ],
           )
         ],
       ),
     );
+  }
+
+  void tapTile() {
+    setState(() {
+      _message = "you tapped: No, $_index";
+    });
   }
 }
