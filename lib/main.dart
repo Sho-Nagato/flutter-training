@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +27,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _controller = TextEditingController();
-  final String _fileName = "flutter_sample_data.txt";
+  final String _fileName = "assets/documents/data.txt";
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const Padding(
               padding: EdgeInsets.all(20.0),
               child: Text(
-                "File Access",
+                "Resource File Access",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize:32.0,
@@ -71,20 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
               child: SizedBox(
                 width: double.infinity,
                 child:  ElevatedButton(
-                  onPressed: saveButtonPressed,
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue
-                  ),
-                  child: const Text("Save", style: TextStyle(fontSize: 20.0),)
-                )
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: SizedBox(
-                width: double.infinity,
-                child:  ElevatedButton(
                   onPressed: loadButtonPressed,
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red
@@ -99,19 +85,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void saveButtonPressed() async {
-    saveIt(_controller.text);
-    setState(() {
-      _controller.text = "";
-    });
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => const AlertDialog(
-        title: Text("saved!!"),
-        content: Text("save message to file."),
-      ));
-  }
-
   void loadButtonPressed() async {
     String value = await loadIt();
     setState(() {
@@ -122,24 +95,19 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         builder: (BuildContext context) => const AlertDialog(
           title: Text("loaded!!"),
-          content: Text("load message from file."),
+          content: Text("load message from Assets."),
         ));
   }
 
-  Future<File> getDataFile(String fileName) async {
-    final directory = await getApplicationDocumentsDirectory();
-    return File("${directory.path}/$fileName");
-  }
-
-  void saveIt(String value) async {
-    final file = await getDataFile(_fileName);
-    file.writeAsString(value);
+  Future<String> getDataAssets(String path) async {
+    String value = await rootBundle.loadString(path);
+    return value;
   }
 
   Future<String> loadIt() async {
     try {
-      final file = await getDataFile(_fileName);
-      return file.readAsString();
+      final res = await getDataAssets(_fileName);
+      return res;
     } catch (e) {
       return "*** no data ***";
     }
