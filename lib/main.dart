@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +26,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static int _count = 0;
+  final TextEditingController _controller = TextEditingController();
+  final String _fileName = "flutter_sample_data.txt";
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +41,12 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(20.0),
+            const Padding(
+              padding: EdgeInsets.all(20.0),
               child: Text(
-                "$_count",
+                "File Access",
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize:32.0,
                   color: Color(0xFF000000),
                   fontWeight: FontWeight.w400,
@@ -51,20 +55,27 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
 
+            TextField(
+              controller: _controller,
+              style: const TextStyle(fontSize: 20.0),
+              minLines: 1,
+              maxLines: 5,
+            ),
+
+            const Padding(
+              padding: EdgeInsets.only(top:10.0)
+            ),
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: SizedBox(
                 width: double.infinity,
                 child:  ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _count++;
-                    });
-                  },
+                  onPressed: saveButtonPressed,
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue
                   ),
-                  child: const Text("プラス", style: TextStyle(fontSize: 20.0),)
+                  child: const Text("Save", style: TextStyle(fontSize: 20.0),)
                 )
               ),
             ),
@@ -72,59 +83,65 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: SizedBox(
-                  width: double.infinity,
-                  child:  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _count--;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red
-                    ),
-                    child: const Text("マイナス", style: TextStyle(fontSize: 20.0),)
-                  )
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: SizedBox(
-                  width: double.infinity,
-                  child:  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _count *= 2;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amber
-                    ),
-                    child: const Text("2倍", style: TextStyle(fontSize: 20.0),)
-                  )
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: SizedBox(
-                  width: double.infinity,
-                  child:  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _count = 0;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green
-                    ),
-                    child: const Text("クリア", style: TextStyle(fontSize: 20.0),)
-                  )
+                width: double.infinity,
+                child:  ElevatedButton(
+                  onPressed: loadButtonPressed,
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red
+                  ),
+                  child: const Text("Load", style: TextStyle(fontSize: 20.0),)
+                )
               ),
             ),
           ]
         ),
       ),
     );
+  }
+
+  void saveButtonPressed() async {
+    saveIt(_controller.text);
+    setState(() {
+      _controller.text = "";
+    });
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => const AlertDialog(
+        title: Text("saved!!"),
+        content: Text("save message to file."),
+      ));
+  }
+
+  void loadButtonPressed() async {
+    String value = await loadIt();
+    setState(() {
+      _controller.text = value;
+    });
+    if (!context.mounted) return;
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => const AlertDialog(
+          title: Text("loaded!!"),
+          content: Text("load message from file."),
+        ));
+  }
+
+  Future<File> getDataFile(String fileName) async {
+    final directory = await getApplicationDocumentsDirectory();
+    return File("${directory.path}/$fileName");
+  }
+
+  void saveIt(String value) async {
+    final file = await getDataFile(_fileName);
+    file.writeAsString(value);
+  }
+
+  Future<String> loadIt() async {
+    try {
+      final file = await getDataFile(_fileName);
+      return file.readAsString();
+    } catch (e) {
+      return "*** no data ***";
+    }
   }
 }
