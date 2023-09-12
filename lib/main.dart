@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -27,7 +28,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _controller = TextEditingController();
-  final String _fileName = "assets/documents/data.txt";
+  static String host = "baconipsum.com";
+  static String path = "/api/?type=meat-and-filler&paras=1&format=text";
+  static String getUri = "https://baconipsum.com/api/?type=meat-and-filler&paras=1&format=text";
+  static String postUri = "https://jsonplaceholder.typicode.com/posts";
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const Padding(
               padding: EdgeInsets.all(20.0),
               child: Text(
-                "Shared Preferences Access",
+                "Network Access",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize:32.0,
@@ -59,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: _controller,
               style: const TextStyle(fontSize: 20.0),
               minLines: 1,
-              maxLines: 5,
+              maxLines: 10,
             ),
 
             const Padding(
@@ -71,11 +75,11 @@ class _MyHomePageState extends State<MyHomePage> {
               child: SizedBox(
                 width: double.infinity,
                 child:  ElevatedButton(
-                  onPressed: saveButtonPressed,
+                  onPressed: getHttpButtonPressed,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue
                   ),
-                  child: const Text("Save", style: TextStyle(fontSize: 20.0),)
+                  child: const Text("HTTP (Get)", style: TextStyle(fontSize: 20.0),)
                 )
               ),
             ),
@@ -85,11 +89,25 @@ class _MyHomePageState extends State<MyHomePage> {
               child: SizedBox(
                 width: double.infinity,
                 child:  ElevatedButton(
-                  onPressed: loadButtonPressed,
+                  onPressed: getHttpsButtonPressed,
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red
+                      backgroundColor: Colors.blue
                   ),
-                  child: const Text("Load", style: TextStyle(fontSize: 20.0),)
+                  child: const Text("HTTPS (Get)", style: TextStyle(fontSize: 20.0),)
+                )
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: SizedBox(
+                width: double.infinity,
+                child:  ElevatedButton(
+                  onPressed: postHttpsButtonPressed,
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue
+                  ),
+                  child: const Text("HTTPS (Post)", style: TextStyle(fontSize: 20.0),)
                 )
               ),
             ),
@@ -99,40 +117,36 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void saveButtonPressed() async {
-    savePref();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => const AlertDialog(
-        title: Text("saved!!"),
-        content: Text("save message to Shared Preferences."),
-      )
-    );
+  void getHttpButtonPressed() async {
+    HttpClient httpClient = HttpClient();
+    HttpClientRequest request = await httpClient.get(host, 80, path);
+    HttpClientResponse response = await request.close();
+    final String value = await response.transform(utf8.decoder).join();
+    _controller.text = value;
   }
 
-  void loadButtonPressed() async {
-    loadPref();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => const AlertDialog(
-        title: Text("loaded!!"),
-        content: Text("load message from Shared Preferences."),
-      )
-    );
+  void getHttpsButtonPressed() async {
+    HttpClient httpClient = HttpClient();
+    HttpClientRequest request = await httpClient.getUrl(Uri.parse(getUri));
+    HttpClientResponse response = await request.close();
+    final String value = await response.transform(utf8.decoder).join();
+    _controller.text = value;
   }
 
-  void savePref() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString("input", _controller.text);
-    setState(() {
-      _controller.text = "";
-    });
-  }
+  void postHttpsButtonPressed() async {
+    final ob = {
+      "title":"foo",
+      "author":"flutter",
+      "content":"this is sample content."
+    };
 
-  void loadPref() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _controller.text = prefs.getString("input") ?? "";
-    });
+    final jsonData = json.encode(ob);
+    HttpClient httpClient = HttpClient();
+    HttpClientRequest request = await httpClient.postUrl(Uri.parse(postUri));
+    request.headers.set(HttpHeaders.contentTypeHeader, "application/json; charset=UTF-8");
+    request.write(jsonData);
+    HttpClientResponse response = await request.close();
+    final String value = await response.transform(utf8.decoder).join();
+    _controller.text = value;
   }
 }
