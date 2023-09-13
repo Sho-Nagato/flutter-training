@@ -1,3 +1,27 @@
+/*
+1. Firebaseのアカウントを作成（GoogleアカウントがあればOK）
+
+2. Firebase CLIのインストール（https://firebase.google.com/docs/cli?hl=ja）
+
+3. FlutterプロジェクトにFirebaseパッケージをインストール & アップデート
+   ・flutter pub add firebase_core
+   ・flutter pub upgrade firebase_core
+
+4. Flutterプロジェクトにcloud_firestoreパッケージをインストール & アップデート
+   ・flutter pub add cloud_firestore
+   ・flutter pub upgrade cloud_firestore
+
+5. Firebaseプロジェクトを作成
+
+6. コレクション、ドキュメントを作成
+
+7. FlutterプロジェクトにFirebaseの設定
+   ・dart pub global activate flutterfire_cli
+   ・flutterfire configre
+     - プロジェクトの選択
+     - プラットフォームの選択（Android）
+ */
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
