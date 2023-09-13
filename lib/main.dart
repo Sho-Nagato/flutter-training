@@ -1,10 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_training/firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -28,10 +29,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _controller = TextEditingController();
-  static String host = "baconipsum.com";
-  static String path = "/api/?type=meat-and-filler&paras=1&format=text";
-  static String getUri = "https://baconipsum.com/api/?type=meat-and-filler&paras=1&format=text";
-  static String postUri = "https://jsonplaceholder.typicode.com/posts";
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +72,11 @@ class _MyHomePageState extends State<MyHomePage> {
               child: SizedBox(
                 width: double.infinity,
                 child:  ElevatedButton(
-                  onPressed: getHttpButtonPressed,
+                  onPressed: findAll,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue
                   ),
-                  child: const Text("HTTP (Get)", style: TextStyle(fontSize: 20.0),)
+                  child: const Text("Find All", style: TextStyle(fontSize: 20.0),)
                 )
               ),
             ),
@@ -89,11 +86,11 @@ class _MyHomePageState extends State<MyHomePage> {
               child: SizedBox(
                 width: double.infinity,
                 child:  ElevatedButton(
-                  onPressed: getHttpsButtonPressed,
+                  onPressed: findByName,
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue
+                    backgroundColor: Colors.blue
                   ),
-                  child: const Text("HTTPS (Get)", style: TextStyle(fontSize: 20.0),)
+                  child: const Text("Find By Name", style: TextStyle(fontSize: 20.0),)
                 )
               ),
             ),
@@ -103,11 +100,27 @@ class _MyHomePageState extends State<MyHomePage> {
               child: SizedBox(
                 width: double.infinity,
                 child:  ElevatedButton(
-                  onPressed: postHttpsButtonPressed,
+                  onPressed: findByNameLike,
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue
+                    backgroundColor: Colors.blue
                   ),
-                  child: const Text("HTTPS (Post)", style: TextStyle(fontSize: 20.0),)
+                  child: const Text("Find By Name Like", style: TextStyle(fontSize: 20.0),)
+                )
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: SizedBox(
+                width: double.infinity,
+                child:  ElevatedButton(
+                  onPressed: () {
+                    _controller.text = "";
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red
+                  ),
+                  child: const Text("Text Field Clear", style: TextStyle(fontSize: 20.0),)
                 )
               ),
             ),
@@ -117,36 +130,46 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void getHttpButtonPressed() async {
-    HttpClient httpClient = HttpClient();
-    HttpClientRequest request = await httpClient.get(host, 80, path);
-    HttpClientResponse response = await request.close();
-    final String value = await response.transform(utf8.decoder).join();
-    _controller.text = value;
+  void findAll() async {
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
+    final snapshot = await fireStore.collection("mydata").get();
+    String msg = "";
+    for (var element in snapshot.docChanges) {
+      String name = element.doc.get("name");
+      String mail = element.doc.get("mail");
+      int age = element.doc.get("age");
+      msg += "$name ($age) $mail\n";
+    }
+    _controller.text = msg;
   }
 
-  void getHttpsButtonPressed() async {
-    HttpClient httpClient = HttpClient();
-    HttpClientRequest request = await httpClient.getUrl(Uri.parse(getUri));
-    HttpClientResponse response = await request.close();
-    final String value = await response.transform(utf8.decoder).join();
-    _controller.text = value;
+  void findByName() async {
+    String msg = _controller.text;
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
+    final snapshot = await fireStore.collection("mydata").where("name", isEqualTo: msg).get();
+    for (var element in snapshot.docChanges) {
+      String name = element.doc.get("name");
+      String mail = element.doc.get("mail");
+      int age = element.doc.get("age");
+      msg += "\n$name ($age) $mail";
+    }
+    _controller.text = msg;
   }
 
-  void postHttpsButtonPressed() async {
-    final ob = {
-      "title":"foo",
-      "author":"flutter",
-      "content":"this is sample content."
-    };
-
-    final jsonData = json.encode(ob);
-    HttpClient httpClient = HttpClient();
-    HttpClientRequest request = await httpClient.postUrl(Uri.parse(postUri));
-    request.headers.set(HttpHeaders.contentTypeHeader, "application/json; charset=UTF-8");
-    request.write(jsonData);
-    HttpClientResponse response = await request.close();
-    final String value = await response.transform(utf8.decoder).join();
-    _controller.text = value;
+  void findByNameLike() async {
+    String msg = _controller.text;
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
+    final snapshot = await fireStore.collection("mydata")
+        .orderBy("name", descending: false)
+        .startAt([msg])
+        .endAt(["$msg\uf8ff"])
+        .get();
+    for (var element in snapshot.docChanges) {
+      String name = element.doc.get("name");
+      String mail = element.doc.get("mail");
+      int age = element.doc.get("age");
+      msg += "\n$name ($age) $mail";
+    }
+    _controller.text = msg;
   }
 }
