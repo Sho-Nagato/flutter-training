@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const Padding(
               padding: EdgeInsets.all(20.0),
               child: Text(
-                "Network Access",
+                "Firebase Access",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize:32.0,
