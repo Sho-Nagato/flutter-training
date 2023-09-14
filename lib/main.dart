@@ -138,6 +138,20 @@ class _MyHomePageState extends State<MyHomePage> {
               child: SizedBox(
                 width: double.infinity,
                 child:  ElevatedButton(
+                  onPressed: addDoc,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue
+                  ),
+                  child: const Text("Add Document", style: TextStyle(fontSize: 20.0),)
+                )
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: SizedBox(
+                width: double.infinity,
+                child:  ElevatedButton(
                   onPressed: () {
                     _controller.text = "";
                   },
@@ -195,5 +209,17 @@ class _MyHomePageState extends State<MyHomePage> {
       msg += "\n$name ($age) $mail";
     }
     _controller.text = msg;
+  }
+
+  void addDoc() async {
+    List<String> inputMsg = _controller.text.split(",");
+    Map<String, dynamic> data = {
+      "name":inputMsg[0],
+      "mail":inputMsg[1],
+      "age":int.parse(inputMsg[2])
+    };
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
+    await fireStore.collection("mydata").add(data);
+    _controller.text = "";
   }
 }
